@@ -1,45 +1,24 @@
+import java.time.LocalDate;
+import java.time.Month;
+
 public class TestaConta {
     public static void main(String[] args) {
-        Cliente cliente = new Cliente();
-        cliente.nomeCompleto = " Maria";
+        LocalDate dataNascimento = LocalDate.of(1990, Month.APRIL, 02);
+        Cliente cliente = new Cliente("Maria", "210548545", dataNascimento, new Endereco());
+
+        Conta contaCorrente = new Conta(cliente, "1234", "12345-6", "Conta Corrente");
+        contaCorrente.depositar(100);
+
+        System.out.println(Conta.getTotaldeContas());
         
-        Data hoje = new Data();
-        hoje.dia=25;
-        hoje.mes=04;
-        hoje.ano=2022;
-
-        Conta contaCorrente = new Conta();
-        contaCorrente.numero = "12345-6";
-        contaCorrente.agencia = "1234";
-        contaCorrente.ativa = true;
-        contaCorrente.cliente = cliente;
-        contaCorrente.dataDeAvertura = hoje;
-        contaCorrente.limite = 300;
-        contaCorrente.saldo = 100;
-        contaCorrente.tipo = "Conta Corrente";
-
-
-
-        Conta contaPoupanca = new Conta();
-        contaPoupanca.numero = "12345-6";
-        contaPoupanca.agencia = "1234";
-        contaPoupanca.ativa = true;
-        contaPoupanca.cliente = cliente;
-        contaPoupanca.dataDeAvertura = hoje;
-        contaPoupanca.limite = 0;
-        contaPoupanca.saldo = 1000;
-        contaPoupanca.tipo = "Conta Poupança";
-
-        if (contaCorrente == contaPoupanca) {
-            System.out.println("Contas iguais.");
-        } else {
-            System.out.println("Contas diferentes.");
-        }
-
+        Conta contaPoupanca = new Conta(cliente, "1234", "12345-6", "Conta Poupança");
+        contaPoupanca.depositar(100);
+        
+        System.out.println(Conta.getTotaldeContas());
+        
         double rendimentoAbril = contaCorrente.calcularRendimentoMensal(0.1);
         System.out.println("O rendimento de abril é de: " + rendimentoAbril);
-
-        System.out.println(contaCorrente.recuperarDadosParaImpressao());
-
+        
+        System.out.println(contaCorrente);
     }
 }

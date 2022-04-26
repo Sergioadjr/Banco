@@ -1,12 +1,27 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Conta {
-    double saldo;
-    String tipo;
-    String numero;
-    String agencia;
-    double limite;
-    boolean ativa;
-    Data dataDeAvertura;
-    Cliente cliente;
+    private double saldo;
+    private String tipo;
+    private String numero;
+    private String agencia;
+    private double limite;
+    private boolean ativa;
+    private LocalDateTime dataDeAbertura;
+    private Cliente cliente;
+    private static int contador = 0;
+
+    Conta(Cliente cliente, String agencia, String numero, String tipo) {
+        this.cliente = cliente;
+        this.agencia = agencia;
+        this.numero = numero;
+        this.tipo = tipo;
+        this.saldo = 0;
+        this.ativa = true;
+        this.dataDeAbertura = LocalDateTime.now();
+        Conta.contador++;
+    }
 
     boolean sacar(double valor) {
         double novoSaldo = this.saldo - valor;
@@ -14,14 +29,18 @@ public class Conta {
             this.saldo = novoSaldo;
             return true;
         } else {
-            System.out.println("Saldo insuficiência");
+            mensagemSaldoInsuficiente();
             return false;
         }
     }
 
+    private void mensagemSaldoInsuficiente() {
+        System.out.println("Saldo insuficiente");
+    }
+
     void depositar(double valor) {
         if (valor <= 0) {
-            System.out.println("Valor inválido");
+            mensagemSaldoInsuficiente();
         } else {
             this.saldo += valor;
         }
@@ -36,7 +55,7 @@ public class Conta {
         if (this.sacar(ValorPIX)) {
             contaDestino.depositar(ValorPIX);
         } else {
-            System.out.println("Salvo insuficiente");
+            mensagemSaldoInsuficiente();
         }
     }
 
@@ -44,12 +63,53 @@ public class Conta {
         return this.saldo * taxa;
     }
 
-    String recuperarDadosParaImpressao() {
-        return "Nome do titular:" + this.cliente.nomeCompleto + "\n" +
+    public void aumentarLimite(double valor) {
+        this.limite += valor;
+    }
+
+    public static int getTotaldeContas() {
+        return Conta.contador;
+    }
+
+    public String getAgencia() {
+        return agencia;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public LocalDateTime getDataDeAbertura() {
+        return dataDeAbertura;
+    }
+
+    public double getLimite() {
+        return limite;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public double getSaldo() {
+        return saldo + this.getLimite();
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public boolean isAtiva() {
+        return ativa;
+    }
+
+    @Override
+    public String toString() {
+        return "Nome do titular:" + this.cliente + "\n" +
                 "Ag: " + this.agencia + "\n" +
                 "Número da Conta: " + this.numero + "\n" +
-                "Data Abertura: " + this.dataDeAvertura.toString() + "\n" +
-                "Saldo: " + String.format("%.2f", this.saldo) ;
+                "Data Abertura: " + this.dataDeAbertura.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n" +
+                "Saldo: " + String.format("%.2f", this.saldo);
     }
 
 }
